@@ -5,12 +5,37 @@ import praw
 import re
 import os
 import datetime as DT
+import yaml
 import sLOUT as lout
 
+# Create config.yml if it doesn't exist
+if not os.path.isfile('repliedPosts.txt'):
+    configValues = {'redditAccount', 'subreddit', 'botName', 'postTitle', 'postText', 'reply', 'postTitle2', 'postText2', 'reply2'}
+    with open('config.yml', 'w') as f:
+        configuration = yaml.dump(configValues, f)
+
+# Read yaml file and assign its data to variables
+with open('config.yml') as f:
+    config = yaml.safe_load(f)
+    
+    # Bot configuration
+    redditAccount = config['redditAccount']
+    sub = config['subreddit']
+    botName = str(config['botName'])
+
+    # First message
+    postTitle = config['postTitle']
+    postText = config['postText']
+    reply = config['reply']
+
+    # Second message
+    postTitle2 = config['postTitle2']
+    postText2 = config['postText2']
+    reply2 = config['reply2']
+
 # Select a reddit account from praw.ini and select a subreddit
-reddit = praw.Reddit('bot1')
-subreddit = reddit.subreddit('')
-botName = 'GenericBot'   # Replace with a bot name
+reddit = praw.Reddit(redditAccount)
+subreddit = reddit.subreddit(sub)
 
 # Write to the logs stating that the bot has been initialized
 lout.writeFile('{}Logs.txt'.format(botName), 'Bot initialized', True)
@@ -30,8 +55,7 @@ for submission in subreddit.new(limit=5):
     startTime = DT.datetime.now()                           # Store the time an operation on a post was started
 
     # Check if the post already has a reply from the bot and if 'No.' (not case sensitive) is in the post and if 'Post Title 1' (not case sensitive) is in the title
-    if submission.id not in repliedPosts and re.search('No.', submission.selftext, re.IGNORECASE) and re.search('Post Title 1', submission.title, re.IGNORECASE):
-        reply = 'Reply 1'                                                      # The message that the bot will reply with
+    if submission.id not in repliedPosts and re.search(postText, submission.selftext, re.IGNORECASE) and re.search(postTitle, submission.title, re.IGNORECASE):
         submission.reply(reply)                                                # Reply to the post with the contents of the variable 'reply'
         print('Replying to: {}, {}'.format(submission.title, submission.id))   # Print which post is being replied to
         repliedPosts.append(submission.id)                                     # Add the post to the list of posts that have been replied to
@@ -40,17 +64,18 @@ for submission in subreddit.new(limit=5):
         with open("repliedPosts.txt", "w") as f:
             for post_id in repliedPosts:                                              # run shit for each each id (called post_id) in the list repliedPosts
                 f.write(post_id + "\n")                                               # Write the ID on a new line
-                lout.log(startTime, 'Replied \'{}\''.format(reply), botName)          # Write to the log using sLOUT
+        
+        lout.log(startTime, 'Replied \'{}\''.format(reply), botName)                  # Write to the log using sLOUT
 
     # Check if the post already has a reply from the bot and if 'No.' (not case sensitive) is in the post and if 'Post Title 2' (not case sensitive) is in the title            
-    elif submission.id not in repliedPosts and re.search('Yes.', submission.selftext, re.IGNORECASE) and re.search('Post Title 2', submission.title, re.IGNORECASE):
-        reply = 'Reply 2'                                                       # The message that the bot will reply with
-        submission.reply(reply)                                                 # Reply to the post with 'Reply 2'
-        print('Replying to: {}, {}'.format(submission.title, submission.id))    # Print which post is being replied to
+    elif submission.id not in repliedPosts and re.search(postText2, submission.selftext, re.IGNORECASE) and re.search(postTitle2, submission.title, re.IGNORECASE):
+        submission.reply(reply2)                                                 # Reply to the post with the contents of the variable 'reply'
+        print('Replying to: {}, {}'.format(submission.title, submission.id))     # Print which post is being replied to
         repliedPosts.append(submission.id)
 
         # Open or create the file repliedPosts.txt
         with open("repliedPosts.txt", "w") as f:
             for post_id in repliedPosts:                                              # run shit for each each id (called post_id) in the list repliedPosts
                 f.write(post_id + "\n")                                               # Write the ID on a new line
-                lout.log(startTime, 'Replied \'{}\''.format(reply), botName)          # Write to the log using sLOUT
+        
+        lout.log(startTime, 'Replied \'{}\''.format(reply2), botName)                 # Write to the log using sLOUT

@@ -1,0 +1,16 @@
+# If you don't know what to do here, check the wiki page here: (unwritten)
+
+# which config praw should use (configured in praw.ini)
+redditAccount: bot1    # You probably don't need to change this
+subreddit:
+botName:
+
+# First message
+postTitle:         # Titles of posts that the bot should search for
+postText:          # The text the bot should search for in a post
+reply:             # How the bot should reply to the first set of criteria
+
+# Second message
+postTitle2:        # Titles of posts that the bot should search for
+postText2:         # The text the bot should search for in a post
+reply2:            # How the bot should reply to the first set of criteria
