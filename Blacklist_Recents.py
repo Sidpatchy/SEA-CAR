@@ -17,7 +17,7 @@ else:
        repliedPosts = repliedPosts.split('\n')
        repliedPosts = list(filter(None, repliedPosts))
 
-for submission in subreddit.hot(limit=100):    # Change the limit to an amount you deem best
+for submission in subreddit.hot(limit=1000):    # Change the limit to an amount you deem best
     print('Blacklisting: {}, {}'.format(submission.title, submission.id))
     print()
     if submission.id not in repliedPosts:
