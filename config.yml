@@ -1,4 +1,4 @@
-# If you don't know what to do here, check the wiki page here: (unwritten)
+# If you don't know what to do here, check the wiki page here: https://github.com/Sidpatchy/SEA-CAR/wiki/Using-the-bot
 
 # which config praw should use (configured in praw.ini)
 redditAccount: bot1    # You probably don't need to change this
